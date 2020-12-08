@@ -43,10 +43,11 @@ function radialProject(x, y, cx, cy) {
   if (x === cx && y === cy) {
     return [x, y];
   }
+  const multA = 2;
   const tanA = (y - cy) / (x - cx);
   const a = Math.atan(tanA);
   const r = Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2));
-  return [r * Math.cos(2 * a) + cx, r * Math.sin(2 * a) + cy];
+  return [r * Math.cos(multA * a) + cx, r * Math.sin(multA * a) + cy];
 }
 
 function drawTree(root) {
