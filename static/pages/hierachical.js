@@ -39,14 +39,15 @@ function drawCirclePack(root) {
   allPackG.exit().remove();
 }
 
-function radialProject(x, y, cx, cy) {
+function radialProject(x, y, cx, cy, multR) {
   if (x === cx && y === cy) {
     return [x, y];
   }
   const multA = 2;
   const tanA = (y - cy) / (x - cx);
   const a = Math.atan(tanA);
-  const r = Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2));
+  // const r = Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2));
+  const r = 120 * multR;
   return [r * Math.cos(multA * a) + cx, r * Math.sin(multA * a) + cy];
 }
 
@@ -83,8 +84,8 @@ function drawTree(root) {
     .attr('fill', 'none')
     .attr('d', (d) => {
       if (d.parent) {
-        const rotatedChild = radialProject(d.x, d.y, treeRoot.x, treeRoot.y);
-        const rotatedParent = radialProject(d.parent.x, d.parent.y, treeRoot.x, treeRoot.y);
+        const rotatedChild = radialProject(d.x, d.y, treeRoot.x, treeRoot.y, d.depth);
+        const rotatedParent = radialProject(d.parent.x, d.parent.y, treeRoot.x, treeRoot.y, d.parent.depth);
         return d3.linkVertical()({
           source: [rotatedChild[0], rotatedChild[1]], 
           target: [rotatedParent[0], rotatedParent[1]],
@@ -97,7 +98,7 @@ function drawTree(root) {
     .append('g')
     .attr('class', 'node')
     .attr('transform', (d) => {
-      const rotated = radialProject(d.x, d.y, treeRoot.x, treeRoot.y);
+      const rotated = radialProject(d.x, d.y, treeRoot.x, treeRoot.y, d.depth);
       return `translate(${rotated[0]} ${rotated[1]})`;
     })
     .each(function(d, i) {
