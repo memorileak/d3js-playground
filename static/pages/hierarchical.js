@@ -39,18 +39,6 @@ function drawCirclePack(root) {
   allPackG.exit().remove();
 }
 
-function radialProject(x, y, cx, cy, multR) {
-  if (x === cx && y === cy) {
-    return [x, y];
-  }
-  const multA = 2;
-  const tanA = (y - cy) / (x - cx);
-  const a = Math.atan(tanA);
-  // const r = Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2));
-  const r = 120 * multR;
-  return [r * Math.cos(multA * a) + cx, r * Math.sin(multA * a) + cy];
-}
-
 function drawTree(root) {
   const canvasPaddingTop = 10;
   const canvasPaddingLeft = 10;
@@ -63,16 +51,11 @@ function drawTree(root) {
     .domain([0, 1, 3, 2])
     .range(['#364f6b', '#3fc1c9', '#f5f5f5', '#fc5185']);
 
-  const treeRoot = d3.tree()
-    .size([canvasWidth / 2.5, canvasHeight / 2.5])(root);
-  console.log(treeRoot);
+  const treeRoot = d3.radialTree().radius(75)(root);
+  // console.log(treeRoot);
 
   const canvas = svg.select('g#treecanvas')
-    .attr('transform', `translate(${
-      canvasPaddingLeft + canvasWidth / 2 - treeRoot.x
-    }, ${
-      canvasPaddingTop + canvasHeight / 2
-    })`);
+    .attr('transform', `translate(${canvasPaddingLeft + canvasWidth / 2}, ${canvasPaddingTop + canvasHeight / 2})`);
 
   const allLink = canvas.selectAll('path.link').data(treeRoot.descendants());
   const allNode = canvas.selectAll('g.node').data(treeRoot.descendants());
@@ -84,11 +67,9 @@ function drawTree(root) {
     .attr('fill', 'none')
     .attr('d', (d) => {
       if (d.parent) {
-        const rotatedChild = radialProject(d.x, d.y, treeRoot.x, treeRoot.y, d.depth);
-        const rotatedParent = radialProject(d.parent.x, d.parent.y, treeRoot.x, treeRoot.y, d.parent.depth);
         return d3.linkVertical()({
-          source: [rotatedChild[0], rotatedChild[1]], 
-          target: [rotatedParent[0], rotatedParent[1]],
+          source: [d.x, d.y], 
+          target: [d.parent.x, d.parent.y],
         });
       }
       return '';
@@ -97,10 +78,7 @@ function drawTree(root) {
   allNode.enter()
     .append('g')
     .attr('class', 'node')
-    .attr('transform', (d) => {
-      const rotated = radialProject(d.x, d.y, treeRoot.x, treeRoot.y, d.depth);
-      return `translate(${rotated[0]} ${rotated[1]})`;
-    })
+    .attr('transform', (d) => `translate(${d.x} ${d.y})`)
     .each(function(d, i) {
       const circle = d3.select(this).append('circle');
       circle
@@ -119,7 +97,7 @@ window.addEventListener('load', function() {
     const root = d3.hierarchy(nestedTweets, (d) => d[1]).sum(() => 1);
     console.log(root);
 
-    drawCirclePack(root);
+    // drawCirclePack(root);
     drawTree(root);
   }, (err) => {
     console.error(err);
