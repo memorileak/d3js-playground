@@ -82,7 +82,7 @@ function drawTree(root) {
     .each(function(d, i) {
       const circle = d3.select(this).append('circle');
       circle
-        .attr('r', 10)
+        .attr('r', 5)
         .attr('fill', nodeFill(d.depth));
     });
 
