@@ -2,7 +2,7 @@ function randomizeDs() {
   const randNormal = d3.randomNormal(0.5, 0.2);
   return (new Array(200))
     .fill(null)
-    .map(() => Math.round(Math.abs(randNormal()) * 700));
+    .map(() => Math.round(Math.abs(randNormal()) * 675));
 }
 
 function drawBubbles(dataset) {
