@@ -9,7 +9,7 @@ function drawBubbles(dataset) {
   const canvasPaddingLeft = 10;
   const canvasPaddingTop = 10;
   const canvasWidth = 700;
-  const canvasHeight = 700;
+  const canvasHeight = 340;
   const nodes = dataset.map((v) => ({value: v}));
 
   const svg = d3.select('svg#bubbles');
@@ -27,6 +27,8 @@ function drawBubbles(dataset) {
     .force('x', d3.forceX().x((d) => canvasPaddingLeft + d.value).strength(2))
     .force('y', d3.forceY().y(canvasPaddingTop + canvasHeight / 2).strength(1))
     .force('collision', d3.forceCollide().radius((d) => 5));
+
+  force.tick(120);
 
   force.on('tick', update);
 
@@ -75,6 +77,8 @@ function drawNetwork(dataset) {
     .force('collision', collideForce)
     .force('link', linkForce);
 
+  force.tick(120);
+
   force.on('tick', update);
 
   svg.selectAll('line.link').data(links, (d) => `${d.from}-${d.to}`).enter()
@@ -119,8 +123,8 @@ function drawNetwork(dataset) {
 }
 
 window.addEventListener('load', function() {
-  // const sampleData = randomizeDs();
-  // drawBubbles(sampleData);
+  const sampleData = randomizeDs();
+  drawBubbles(sampleData);
   d3.json('/static/data/network.json').then((data) => {
     drawNetwork(data);
   }, (err) => {
