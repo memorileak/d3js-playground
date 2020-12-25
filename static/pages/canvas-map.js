@@ -19,8 +19,7 @@ function drawMap(geojson) {
   // const graticule = d3.geoGraticule();
 
   function drawOneFrame() {
-    context.fillStyle = '#f1faee';
-    context.fillRect(0, 0, canvasWidth, canvasHeight);
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
     geojson.features.forEach((d) => {
       context.beginPath();
       context.fillStyle = '#1d3557';
