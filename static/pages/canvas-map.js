@@ -1,6 +1,6 @@
 function drawMap(geojson) {
-  const canvasWidth = 720;
-  const canvasHeight = 720;
+  const canvasWidth = 512;
+  const canvasHeight = 512;
 
   const canvas = d3.select('canvas#theworld');
   const context = canvas.node().getContext('2d');
@@ -21,7 +21,7 @@ function drawMap(geojson) {
   function drawOneFrame() {
     context.fillStyle = '#f1faee';
     context.fillRect(0, 0, canvasWidth, canvasHeight);
-    geojson.features.forEach((d, i) => {
+    geojson.features.forEach((d) => {
       context.beginPath();
       context.fillStyle = '#1d3557';
       geoPath(d);
